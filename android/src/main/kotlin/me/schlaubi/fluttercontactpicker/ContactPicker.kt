@@ -21,7 +21,7 @@ import android.text.TextUtils
 
 class ContactPicker private constructor(private val pickContext: PickContext, private val result: MethodChannel.Result) : PluginRegistry.ActivityResultListener {
 
-    var intentf:Intent
+    var intentf:Intent?;
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
         if (data == null) {
             pickContext.removeActivityResultListener(this)
