@@ -39,7 +39,7 @@ class ContactPicker private constructor(private val pickContext: PickContext, pr
     }
 
     private fun buildPhoneNumber(cursor: Cursor, activity: Activity): Map<String, String> {
-        val avatar="this is a test"
+        var avatar="this is a test"
         val phoneType = cursor.getInt(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE))
         val customLabel = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.LABEL))
         avatar=cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI))
