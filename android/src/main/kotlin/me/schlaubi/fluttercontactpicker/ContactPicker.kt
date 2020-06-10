@@ -74,9 +74,9 @@ class ContactPicker private constructor(private val pickContext: PickContext, pr
     }
     
     public InputStream openPhoto(long contactId) {
-      Uri contactUri = ContentUris.withAppendedId(Contacts.CONTENT_URI, contactId);
-      Uri photoUri = Uri.withAppendedPath(contactUri, Contacts.Photo.CONTENT_DIRECTORY);
-      Cursor cursor = getContentResolver().query(photoUri,
+      var contactUri: Uri = ContentUris.withAppendedId(Contacts.CONTENT_URI, contactId);
+      var photoUri : Uri = Uri.withAppendedPath(contactUri, Contacts.Photo.CONTENT_DIRECTORY);
+      var cursor : Cursor = getContentResolver().query(photoUri,
            new String[] {Contacts.Photo.PHOTO}, null, null, null);
       if (cursor == null) {
           return null;
