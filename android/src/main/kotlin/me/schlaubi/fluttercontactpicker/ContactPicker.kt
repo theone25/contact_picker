@@ -8,6 +8,20 @@ import android.provider.ContactsContract
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.PluginRegistry
 
+
+import android.content.ContentResolver;
+import android.content.ContentUris;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Collections;
+
+
 class ContactPicker private constructor(private val pickContext: PickContext, private val result: MethodChannel.Result) : PluginRegistry.ActivityResultListener {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
@@ -58,6 +72,28 @@ class ContactPicker private constructor(private val pickContext: PickContext, pr
         val address = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA))
         return mapOf("email" to address, label(label))
     }
+    
+    public InputStream openPhoto(long contactId) {
+      Uri contactUri = ContentUris.withAppendedId(Contacts.CONTENT_URI, contactId);
+      Uri photoUri = Uri.withAppendedPath(contactUri, Contacts.Photo.CONTENT_DIRECTORY);
+      Cursor cursor = getContentResolver().query(photoUri,
+           new String[] {Contacts.Photo.PHOTO}, null, null, null);
+      if (cursor == null) {
+          return null;
+      }
+      try {
+          if (cursor.moveToFirst()) {
+              byte[] data = cursor.getBlob(0);
+              if (data != null) {
+                  return new ByteArrayInputStream(data);
+              }
+          }
+      } finally {
+          cursor.close();
+      }
+      return null;
+  }
+
 
     private fun label(label: String) = "label" to label
 
