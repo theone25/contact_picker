@@ -41,7 +41,7 @@ class ContactPicker private constructor(private val pickContext: PickContext, pr
     private fun buildPhoneNumber(cursor: Cursor, activity: Activity): Map<String, String> {
         val phoneType = cursor.getInt(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE))
         val customLabel = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.LABEL))
-        val avatar=cursor.getString(cursor.getColumnIndex(ContactsContract.Photo.CONTENT_DIRECTORY))
+        val avatar=cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI))
         print("this is inside plugin")
         val label = ContactsContract.CommonDataKinds.Phone.getTypeLabel(activity.resources, phoneType, customLabel) as String
         val number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
