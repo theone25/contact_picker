@@ -5,14 +5,11 @@ import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
 import android.provider.ContactsContract
-import java.io.File
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.PluginRegistry
 
-
 class ContactPicker private constructor(private val pickContext: PickContext, private val result: MethodChannel.Result) : PluginRegistry.ActivityResultListener {
 
-    
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
         if (data == null) {
             pickContext.removeActivityResultListener(this)
@@ -42,6 +39,22 @@ class ContactPicker private constructor(private val pickContext: PickContext, pr
     }
 
     private fun buildPhoneNumber(cursor: Cursor, activity: Activity): Map<String, String> {
+        val phoneType = cursor.getInt(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE))
+        val customLabel = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.LABEL))
+        val label = ContactsContract.CommonDataKinds.Phone.getTypeLabel(activity.resources, phoneType, customLabel) as String
+        val number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+        return mapOf("phoneNumber" to number, label(label))
+    }
+
+    private fun buildEmailAddress(cursor: Cursor, activity: Activity): Map<String, String> {
+        val phoneType = cursor.getInt(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE))
+        val customLabel = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.LABEL))
+        val label = ContactsContract.CommonDataKinds.Email.getTypeLabel(activity.resources, phoneType, customLabel) as String
+        val address = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA))
+        return mapOf("email" to address, label(label))
+    }
+    /*  import java.io.File
+     private fun buildPhoneNumber(cursor: Cursor, activity: Activity): Map<String, String> {
         var avatar="this is a test"
         val phoneType = cursor.getInt(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE))
         val customLabel = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.LABEL))
@@ -56,19 +69,16 @@ class ContactPicker private constructor(private val pickContext: PickContext, pr
         val label = ContactsContract.CommonDataKinds.Phone.getTypeLabel(activity.resources, phoneType, customLabel) as String
         val number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
         return mapOf("phoneNumber" to fiipath, label(label))
-    }
-
-    private fun buildEmailAddress(cursor: Cursor, activity: Activity): Map<String, String> {
-        val phoneType = cursor.getInt(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE))
-        val customLabel = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.LABEL))
-        val label = ContactsContract.CommonDataKinds.Email.getTypeLabel(activity.resources, phoneType, customLabel) as String
-        val address = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA))
-        return mapOf("email" to address, label(label))
-    }
-   
-
+    }*/
 
     private fun label(label: String) = "label" to label
-    
-   
+
+    companion object {
+        fun requestPicker(requestCode: Int, type: Uri, result: MethodChannel.Result, context: PickContext) {
+            val picker = ContactPicker(context, result)
+            val pickerIntent = Intent(Intent.ACTION_PICK, type)
+            context.addActivityResultListener(picker)
+            context.activity.startActivityForResult(pickerIntent, requestCode)
+        }
+    }
 }
