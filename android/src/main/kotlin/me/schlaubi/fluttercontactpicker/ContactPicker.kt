@@ -50,7 +50,7 @@ class ContactPicker private constructor(private val pickContext: PickContext, pr
         //var newuri= Uri.parse(avatar)
         val file = File(avatar)
         //val fii=avatar.toFile()
-        var fiipath=file.getAbsolutePath() 
+        var fiipath=file.getAbsolutePath().toString() 
         //var uripath=newuri.getPath().toString()
         //val selectedPath = intentf.getFilePath(avatar)
         val label = ContactsContract.CommonDataKinds.Phone.getTypeLabel(activity.resources, phoneType, customLabel) as String
