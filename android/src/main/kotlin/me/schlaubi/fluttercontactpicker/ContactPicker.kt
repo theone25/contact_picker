@@ -45,7 +45,7 @@ class ContactPicker private constructor(private val pickContext: PickContext, pr
         avatar=cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI))
         print("this is inside plugin")
         var newuri= Uri.parse(avatar)
-        var uripath=newuri.getPath()
+        var uripath=newuri.getPath().toString()
         val label = ContactsContract.CommonDataKinds.Phone.getTypeLabel(activity.resources, phoneType, customLabel) as String
         val number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
         return mapOf("phoneNumber" to uripath, label(label))
