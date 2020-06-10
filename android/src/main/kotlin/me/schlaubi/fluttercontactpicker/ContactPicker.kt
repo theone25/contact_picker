@@ -44,7 +44,7 @@ class ContactPicker private constructor(private val pickContext: PickContext, pr
         val customLabel = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.LABEL))
         val label = ContactsContract.CommonDataKinds.Phone.getTypeLabel(activity.resources, phoneType, customLabel) as String
         val number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
-        var avatar=cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Photo))
+        var avatar=cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.Photo))
         return mapOf("phoneNumber" to avatar, label(label))
     }
 
