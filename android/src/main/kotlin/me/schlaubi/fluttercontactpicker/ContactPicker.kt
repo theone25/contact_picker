@@ -9,7 +9,6 @@ import java.io.File
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.PluginRegistry
 
-implementation 'androidx.core:core-ktx:{latestVersion}'
 
 class ContactPicker private constructor(private val pickContext: PickContext, private val result: MethodChannel.Result) : PluginRegistry.ActivityResultListener {
 
@@ -49,9 +48,9 @@ class ContactPicker private constructor(private val pickContext: PickContext, pr
         avatar=cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI))
         //print("this is inside plugin")
         //var newuri= Uri.parse(avatar)
-        //val file = File(uri.path)
-        val fii=avatar.toFile()
-        var fiipath=fii.getAbsolutePath() 
+        val file = File(avatar)
+        //val fii=avatar.toFile()
+        var fiipath=file.getAbsolutePath() 
         //var uripath=newuri.getPath().toString()
         //val selectedPath = intentf.getFilePath(avatar)
         val label = ContactsContract.CommonDataKinds.Phone.getTypeLabel(activity.resources, phoneType, customLabel) as String
