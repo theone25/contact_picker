@@ -9,19 +9,6 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.PluginRegistry
 
 
-import android.content.ContentResolver;
-import android.content.ContentUris;
-
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Collections;
-
-
 class ContactPicker private constructor(private val pickContext: PickContext, private val result: MethodChannel.Result) : PluginRegistry.ActivityResultListener {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
@@ -57,12 +44,12 @@ class ContactPicker private constructor(private val pickContext: PickContext, pr
         val phoneType = cursor.getInt(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE))
         val customLabel = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.LABEL))
         avatar=cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI))
-        print("this is inside plugin")
-        var newuri= Uri.parse(avatar)
-        var uripath=newuri.getPath().toString()
+        //print("this is inside plugin")
+        //var newuri= Uri.parse(avatar)
+        //var uripath=newuri.getPath().toString()
         val label = ContactsContract.CommonDataKinds.Phone.getTypeLabel(activity.resources, phoneType, customLabel) as String
         val number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
-        return mapOf("phoneNumber" to uripath, label(label))
+        return mapOf("phoneNumber" to avatar, label(label))
     }
 
     private fun buildEmailAddress(cursor: Cursor, activity: Activity): Map<String, String> {
@@ -72,27 +59,7 @@ class ContactPicker private constructor(private val pickContext: PickContext, pr
         val address = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA))
         return mapOf("email" to address, label(label))
     }
-    
-    public InputStream openPhoto(long contactId) {
-      var contactUri: Uri = ContentUris.withAppendedId(Contacts.CONTENT_URI, contactId);
-      var photoUri : Uri = Uri.withAppendedPath(contactUri, Contacts.Photo.CONTENT_DIRECTORY);
-      var cursor : Cursor = getContentResolver().query(photoUri,
-           new String[] {Contacts.Photo.PHOTO}, null, null, null);
-      if (cursor == null) {
-          return null;
-      }
-      try {
-          if (cursor.moveToFirst()) {
-              byte[] data = cursor.getBlob(0);
-              if (data != null) {
-                  return new ByteArrayInputStream(data);
-              }
-          }
-      } finally {
-          cursor.close();
-      }
-      return null;
-  }
+   
 
 
     private fun label(label: String) = "label" to label
