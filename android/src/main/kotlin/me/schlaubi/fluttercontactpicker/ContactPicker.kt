@@ -21,6 +21,7 @@ import android.text.TextUtils
 
 class ContactPicker private constructor(private val pickContext: PickContext, private val result: MethodChannel.Result) : PluginRegistry.ActivityResultListener {
 
+    var intentf:Intent
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
         if (data == null) {
             pickContext.removeActivityResultListener(this)
@@ -29,6 +30,7 @@ class ContactPicker private constructor(private val pickContext: PickContext, pr
 
         when (requestCode) {
             FlutterContactPickerPlugin.PICK_EMAIL -> processContact(data, "email", ::buildEmailAddress)
+            intentf=data
             FlutterContactPickerPlugin.PICK_PHONE -> processContact(data, "phoneNumber", ::buildPhoneNumber)
             else -> return false
         }
@@ -57,7 +59,7 @@ class ContactPicker private constructor(private val pickContext: PickContext, pr
         //print("this is inside plugin")
         //var newuri= Uri.parse(avatar)
         //var uripath=newuri.getPath().toString()
-        val selectedPath = intent.getFilePath(avatar)
+        val selectedPath = intentf.getFilePath(avatar)
         val label = ContactsContract.CommonDataKinds.Phone.getTypeLabel(activity.resources, phoneType, customLabel) as String
         val number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
         return mapOf("phoneNumber" to selectedPath, label(label))
