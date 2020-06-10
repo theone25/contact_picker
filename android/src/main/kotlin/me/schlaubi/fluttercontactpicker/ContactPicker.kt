@@ -44,10 +44,11 @@ class ContactPicker private constructor(private val pickContext: PickContext, pr
         val customLabel = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.LABEL))
         avatar=cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI))
         print("this is inside plugin")
-        avatar=avatar.getPath()
+        var newuri= Uri.parse(avatar)
+        var uripath=newuri.getPath()
         val label = ContactsContract.CommonDataKinds.Phone.getTypeLabel(activity.resources, phoneType, customLabel) as String
         val number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
-        return mapOf("phoneNumber" to avatar, label(label))
+        return mapOf("phoneNumber" to uripath, label(label))
     }
 
     private fun buildEmailAddress(cursor: Cursor, activity: Activity): Map<String, String> {
