@@ -79,14 +79,6 @@ class ContactPicker private constructor(private val pickContext: PickContext, pr
     fun Uri?.getFilePath(context: Context): String {
     return this?.let { uri -> getRealPath(context, uri) ?: "" } ?: ""
     }
-    companion object {
-        fun requestPicker(requestCode: Int, type: Uri, result: MethodChannel.Result, context: PickContext) {
-            val picker = ContactPicker(context, result)
-            val pickerIntent = Intent(Intent.ACTION_PICK, type)
-            context.addActivityResultListener(picker)
-            context.activity.startActivityForResult(pickerIntent, requestCode)
-        }
-    }
     
     
     
